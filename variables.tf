@@ -1,13 +1,17 @@
-variable "create" {
-  description = "Enable resource creation"
-  type        = bool
-  default     = true
-}
-
 variable "create_vpc" {
   description = "Enable vpc creation"
   type        = bool
   default     = true
+}
+
+variable "create_elasticache" {
+  type    = bool
+  default = true
+}
+
+variable "create_rds" {
+  type    = bool
+  default = true
 }
 
 variable "create_backend" {
@@ -16,7 +20,7 @@ variable "create_backend" {
   default     = true
 }
 
-variable "create_frontend" {
+variable "create_storefront" {
   description = "Enable frontend resources creation"
   type        = bool
   default     = true
@@ -25,17 +29,11 @@ variable "create_frontend" {
 variable "project" {
   description = "The name of the project for which infrastructure is being provisioned."
   type        = string
-  default     = "medusa"
 }
 
 variable "environment" {
   description = "The name of the environment for which infrastructure is being provisioned."
   type        = string
-  default     = "prod"
-}
-
-variable "aws_region" {
-  description = "Your AWS region."
 }
 
 variable "vpc_cidr" {
@@ -56,13 +54,7 @@ variable "listener_port" {
   default     = 443
 }
 
-variable "ecr_repository" {
-  description = "ECR repository for the Medusa docker image."
-  type        = string
-  default = ""
-}
-
-variable "medusa_image_tag" {
+variable "medusa_image" {
   description = "Image tag of the docker image to run in the ECS cluster."
   type        = string
 }
@@ -89,24 +81,21 @@ variable "medusa_storefront_code_repository_url" {
   type        = string
 }
 
-variable "route53_zone_id" {
-  description = "The ID of the hosted zone to contain the record."
-  type        = string
-}
-
 variable "medusa_core_subdomain" {
   description = "The medusa core subdomain."
+  type        = string
+  default     = "api"
+}
+
+variable "medusa_main_domain" {
+  description = "Medusa main domain of core and storefront."
   type        = string
 }
 
 variable "medusa_storefront_subdomain" {
   description = "The medusa storefront subdomain."
   type        = string
-}
-
-variable "main_domain" {
-  description = "Main domain of core and storefront."
-  type        = string
+  default     = "store"
 }
 
 variable "route53_evaluate_target_health" {
@@ -203,6 +192,7 @@ variable "db_username" {
   description = "The username used to authenticate with the PostgreSQL database."
   type        = string
   sensitive   = true
+  default     = "medusa"
 }
 
 variable "db_allocated_storage" {
@@ -275,5 +265,4 @@ variable "github_access_token" {
   description = "Github access token."
   type        = string
   sensitive   = true
-  default = ""
 }
