@@ -40,8 +40,7 @@ resource "aws_amplify_app" "main" {
 
 
   environment_variables = {
-    # TODO add https
-    NEXT_PUBLIC_MEDUSA_BACKEND_URL = "https://${var.medusa_backend_url}"
+    NEXT_PUBLIC_MEDUSA_BACKEND_URL = var.medusa_backend_url
     NEXT_PUBLIC_BASE_URL           = "http://localhost:80"
     NEXT_PUBLIC_DEFAULT_REGION     = "us"
   }
@@ -68,6 +67,10 @@ resource "aws_amplify_domain_association" "main" {
     prefix      = var.medusa_storefront_subdomain
     branch_name = aws_amplify_branch.main.branch_name
   }
+
+  # TODO: explain
+  # https://eu-west-1.console.aws.amazon.com/amplify/apps/d1hg7dmw6oql7k/domains
+  wait_for_verification = false
 
   depends_on = [aws_amplify_app.main]
 }

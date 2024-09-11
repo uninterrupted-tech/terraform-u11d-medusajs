@@ -1,5 +1,5 @@
-output "medusa_domain" {
-  value = aws_route53_record.main.name
+output "medusa_alb" {
+  value = aws_alb.main
 }
 
 output "ecs_security_group_id" {

@@ -206,14 +206,14 @@ resource "aws_alb_target_group" "main" {
   target_type = "ip"
   name        = "${local.prefix}-tg"
   health_check {
-    protocol = "HTTP"
-    port     = var.app_port
-    # interval            = var.health_check_interval
-    # matcher             = var.health_check_matcher
-    # timeout             = var.health_check_timeout
-    # path                = var.health_check_path
-    # healthy_threshold   = var.health_check_healthy_threshold
-    # unhealthy_threshold = var.health_check_unhealthy_threshold
+    protocol            = "HTTP"
+    port                = var.app_port
+    interval            = var.health_check_interval
+    matcher             = var.health_check_matcher
+    timeout             = var.health_check_timeout
+    path                = var.health_check_path
+    healthy_threshold   = var.health_check_healthy_threshold
+    unhealthy_threshold = var.health_check_unhealthy_threshold
   }
 
   tags = local.tags
@@ -232,27 +232,6 @@ resource "aws_alb_listener" "main" {
   }
 
   tags = local.tags
-}
-
-# TODO: Conditionally configure
-# resource "aws_route53_zone" "primary" {
-#   name = var.medusa_main_domain
-
-#   tags = local.tags
-# }
-
-resource "aws_route53_record" "main" {
-  name = "${var.medusa_core_subdomain}.${var.medusa_main_domain}"
-  type = "A"
-
-  # zone_id = aws_route53_zone.primary.id
-  zone_id = "Z0174151RYQN0QABPBE6"
-
-  alias {
-    name                   = aws_alb.main.dns_name
-    zone_id                = aws_alb.main.zone_id
-    evaluate_target_health = var.route53_evaluate_target_health
-  }
 }
 
 resource "aws_security_group" "alb" {

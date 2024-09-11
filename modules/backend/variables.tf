@@ -112,12 +112,6 @@ variable "certificate_arn" {
   sensitive = true
 }
 
-variable "route53_evaluate_target_health" {
-  description = "Specify if you want Route 53 to determine whether to respond to DNS queries using this resource record set by checking the health of the resource record set."
-  type        = string
-  default     = true
-}
-
 variable "vpc_id" {
   type = string
 }
@@ -140,4 +134,34 @@ variable "elasticache_security_group_id" {
 
 variable "postgres_url" {
   type = string
+}
+
+variable "health_check_path" {
+  description = "The path to monitor the health status of the service."
+  type        = string
+}
+
+variable "health_check_healthy_threshold" {
+  description = "Number of consecutive health check successes required before considering a target healthy."
+  type        = number
+}
+
+variable "health_check_interval" {
+  description = "Approximate amount of time, in seconds, between health checks of an individual target."
+  type        = number
+}
+
+variable "health_check_timeout" {
+  description = "Amount of time, in seconds, during which no response from a target means a failed health check."
+  type        = number
+}
+
+variable "health_check_unhealthy_threshold" {
+  description = "Number of consecutive health check failures required before considering a target unhealthy."
+  type        = number
+}
+
+variable "health_check_matcher" {
+  description = "The HTTP code to use when checking for a successful response from a target."
+  type        = number
 }

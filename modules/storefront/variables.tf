@@ -38,3 +38,8 @@ variable "github_access_token" {
   type        = string
   sensitive   = true
 }
+
+variable "certificate_arn" {
+  type      = string
+  sensitive = true
+}

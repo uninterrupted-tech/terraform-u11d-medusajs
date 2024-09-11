@@ -94,6 +94,34 @@ module "backend" {
   elasticache_security_group_id = module.elasticache[0].security_group_id
 
   postgres_url = module.rds[0].postgres_url
+
+  health_check_path                = var.health_check_path
+  health_check_healthy_threshold   = var.health_check_healthy_threshold
+  health_check_interval            = var.health_check_interval
+  health_check_timeout             = var.health_check_timeout
+  health_check_unhealthy_threshold = var.health_check_unhealthy_threshold
+  health_check_matcher             = var.health_check_matcher
+}
+
+module "route53" {
+  source = "./modules/route53"
+
+  count = 1 # TODO
+
+  medusa_main_domain             = var.medusa_main_domain
+  medusa_core_subdomain          = var.medusa_core_subdomain
+  medusa_core_alb                = module.backend[0].medusa_alb
+  route53_evaluate_target_health = var.route53_evaluate_target_health
+}
+
+module "core_certificate" {
+  source = "./modules/certificate"
+
+  count = 1 # TODO
+
+  medusa_main_domain = var.medusa_main_domain
+  medusa_subdomain   = var.medusa_core_subdomain
+  route53_zone_id    = module.route53[0].zone_id
 }
 
 module "storefront" {
@@ -108,7 +136,9 @@ module "storefront" {
   medusa_storefront_subdomain           = var.medusa_storefront_subdomain
   medusa_storefront_code_repository_arn = var.medusa_storefront_code_repository_arn
   medusa_storefront_code_repository_url = var.medusa_storefront_code_repository_url
-  medusa_backend_url                    = module.backend[0].medusa_domain
+  medusa_backend_url                    = "https://${var.medusa_core_subdomain}.${var.medusa_main_domain}" # TODO: change how we pass that from vars
+
+  certificate_arn = var.certificate_arn
 
   github_access_token = var.github_access_token
 }
