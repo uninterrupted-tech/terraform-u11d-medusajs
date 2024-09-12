@@ -34,8 +34,8 @@ locals {
           value = tostring(var.medusa_run_migration)
         },
         {
-          name  = "MEDUSA_ADMIN_USERNAME"
-          value = var.medusa_admin_username
+          name  = "MEDUSA_ADMIN_EMAIL"
+          value = var.medusa_admin_email
         },
         {
           name  = "MEDUSA_ADMIN_PASSWORD"
@@ -92,6 +92,8 @@ resource "aws_ecs_service" "main" {
     target_group_arn = aws_alb_target_group.main.arn
     container_port   = var.app_port
   }
+
+  // TODO: wait_for_steady_state = true
 
   tags = local.tags
 }
@@ -219,6 +221,7 @@ resource "aws_alb_target_group" "main" {
   tags = local.tags
 }
 
+# TODO redirect 80 -> 443
 resource "aws_alb_listener" "main" {
   load_balancer_arn = aws_alb.main.arn
   port              = var.listener_port
@@ -257,11 +260,12 @@ resource "aws_vpc_security_group_ingress_rule" "alb" {
   tags = local.tags
 }
 
-# resource "aws_vpc_security_group_egress_rule" "alb" {
-#   security_group_id = var.elasticache_security_group_id
+# TODO: allow only to ECS
+resource "aws_vpc_security_group_egress_rule" "alb" {
+  security_group_id = aws_security_group.alb.id
 
-#   cidr_ipv4   = "0.0.0.0/0"
-#   ip_protocol = "-1"
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
 
-#   tags = local.tags
-# }
+  tags = local.tags
+}

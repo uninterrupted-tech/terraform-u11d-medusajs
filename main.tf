@@ -18,10 +18,11 @@ resource "aws_secretsmanager_secret" "medusa" {
   }
 }
 
+# TODO: Use it...
 resource "aws_secretsmanager_secret_version" "medusa" {
   secret_id = aws_secretsmanager_secret.medusa.id
   secret_string = jsonencode({
-    username = var.medusa_admin_username
+    email    = var.medusa_admin_email
     password = var.medusa_admin_password
   })
 }
@@ -77,9 +78,9 @@ module "backend" {
   environment = var.environment
 
   ecr_arn         = var.ecr_arn
-  certificate_arn = var.certificate_arn
+  certificate_arn = module.core_certificate[0].arn # TODO: allow selecting custom cert
 
-  medusa_admin_username = var.medusa_admin_username
+  medusa_admin_email    = var.medusa_admin_email
   medusa_admin_password = var.medusa_admin_password
   medusa_image          = var.medusa_image
   medusa_run_migration  = var.medusa_run_migration
@@ -138,7 +139,6 @@ module "storefront" {
   medusa_storefront_code_repository_url = var.medusa_storefront_code_repository_url
   medusa_backend_url                    = "https://${var.medusa_core_subdomain}.${var.medusa_main_domain}" # TODO: change how we pass that from vars
 
-  certificate_arn = var.certificate_arn
-
   github_access_token = var.github_access_token
 }
+

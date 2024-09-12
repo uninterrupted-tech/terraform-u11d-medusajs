@@ -78,8 +78,8 @@ variable "medusa_create_admin_user" {
   default     = true
 }
 
-variable "medusa_admin_username" {
-  description = "The medusa admin username."
+variable "medusa_admin_email" {
+  description = "The medusa admin email."
   type        = string
   sensitive   = true
 }

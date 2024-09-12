@@ -68,6 +68,10 @@ resource "aws_amplify_domain_association" "main" {
     branch_name = aws_amplify_branch.main.branch_name
   }
 
+  certificate_settings {
+    type = "AMPLIFY_MANAGED"
+  }
+
   # TODO: explain
   # https://eu-west-1.console.aws.amazon.com/amplify/apps/d1hg7dmw6oql7k/domains
   wait_for_verification = false
@@ -107,6 +111,17 @@ data "aws_iam_policy_document" "amplify_policy" {
       "codecommit:GitPull",
     ]
     resources = [var.medusa_storefront_code_repository_arn]
+    effect    = "Allow"
+  }
+
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:DescribeLogGroups",
+      "logs:PutLogEvents",
+    ]
+    resources = ["*"]
     effect    = "Allow"
   }
 }

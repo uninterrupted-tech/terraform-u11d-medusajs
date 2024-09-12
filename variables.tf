@@ -69,6 +69,7 @@ variable "certificate_arn" {
   description = "ARN of the default SSL server certificate."
   type        = string
   sensitive   = true
+  default     = ""
 }
 
 variable "medusa_storefront_code_repository_arn" {
@@ -249,8 +250,8 @@ variable "medusa_create_admin_user" {
   default     = true
 }
 
-variable "medusa_admin_username" {
-  description = "The medusa admin username."
+variable "medusa_admin_email" {
+  description = "The medusa admin email."
   type        = string
   sensitive   = true
 }
