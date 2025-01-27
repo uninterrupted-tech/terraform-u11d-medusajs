@@ -248,7 +248,7 @@ variable "backend_ecr_arn" {
   default     = null
 
   validation {
-    condition     = var.backend_ecr_arn != true && var.ecr_backend_create != true
+    condition     = var.backend_ecr_arn != true || var.ecr_backend_create != true
     error_message = "Only one of backend_ecr_arn or ecr_backend_create can be enabled."
   }
 }

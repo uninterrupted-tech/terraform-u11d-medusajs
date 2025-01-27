@@ -3,7 +3,7 @@ terraform {
 }
 
 locals {
-  project     = "medusa"
+  project     = "medusa-demo"
   environment = "prod"
 }
 
@@ -19,29 +19,22 @@ provider "aws" {
 }
 
 module "minimal" {
-  source = "../../"
+  source = "u11d-com/terraform-u11d-medusajs"
 
   project     = local.project
   environment = local.environment
 
   ecr_storefront_create = true
 
-  backend_container_image = "ghcr.io/uninterrupted-tech/medusajs-backend:1.20.10-788e83e"
-  backend_container_registry_credentials = { // Required until we make images public
-    username = "xxx"
-    password = "xxx"
-  }
+  backend_container_image = "ghcr.io/u11d-com/medusa-backend:1.20.10-latest"
   backend_seed_create = true
   backend_seed_run    = true
-  # backend_admin_credentials = { // Use seed or create admin user separately
-  #   email = "admin@medusa.starter"
-  # }
-  backend_extra_environment_variables = { // TBD: Where to put these? Image or module?
+  backend_extra_environment_variables = {
     "NODE_ENV" : "development"
   }
 
-  storefront_create          = false // Enable once image is built and pushed
-  storefront_container_image = "xxx" // Full name of the image, including registry and tag
+  storefront_create          = false
+  storefront_container_image = "xxx"
 }
 
 output "ecr_backend_url" {
